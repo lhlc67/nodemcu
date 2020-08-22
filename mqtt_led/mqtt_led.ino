@@ -14,9 +14,9 @@ WiFiClient client;               // 声明一个WiFiClient对象，用来初始�
 void callback(char *topic, byte *payload, unsigned int length);
 PubSubClient MQTTClient(server, 6002, callback, client);                // 声明一个MQTT对象
 /* OneNet自己定义设备的信息 */
-#define PRODUCT_ID "365396"
-#define API_KEY "=YwVMxLyXSjeGSB1GKntDmZVQR0="
-#define DEVICE_ID "616758553"
+#define PRODUCT_ID ""
+#define API_KEY ""
+#define DEVICE_ID ""
 #define TOPIC "ControllerLED"
 
 void setup()
