@@ -15,28 +15,9 @@ MFRC522 *mfcr_ptr;
 void setup()
 {
     Serial_Init(115200);
-
-    // SPI.begin();
-    // mfcr_ptr->PCD_Init();
-    // Serial.println("MFRC522 TEST START!");
-
-    // for (byte i = 0; i < 6; i++) {
-    //     key.keyByte[i] = 0xFF;
-    // }
-
-    // Serial.println("This code scan the MIFARE Classsic NUID.");
-    // Serial.print("Using the following key:");
-    // printHex(key.keyByte, MFRC522::MF_KEY_SIZE);
-    // Serial.println();
     mfcr_ptr = Mfrc522_init(SS_PIN, RST_PIN);
-
     pinMode(16, OUTPUT);
 
-
-    // // 舵机
-    // servo.attach(2);//PWM引脚设置，与GPIO引脚号对应.
-    // servo.write(0);
-    // delay(1000);
 }
 
 void loop()
