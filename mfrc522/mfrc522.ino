@@ -1,8 +1,5 @@
-#include <Arduino.h>
-#include <SPI.h>
-#include <MFRC522.h>
-#include <Servo.h>
 #include "espUtils.h"
+#include "mfrcUtils.h"
 
 /*
 接线
@@ -10,28 +7,29 @@ https://upload-images.jianshu.io/upload_images/2109322-30f1dae3ba0a9147.png?imag
 MFRC522  ---   NodeMCU
 */
 
-#define RST_PIN 5
-#define SS_PIN 4
-MFRC522 mfrc522(SS_PIN, RST_PIN);
-MFRC522::MIFARE_Key key;
+const int SS_PIN = 4;
+const int RST_PIN = 5;
 String content = "";
 // Servo servo;
-
+MFRC522 *mfcr_ptr;
 void setup()
 {
     Serial_Init(115200);
-    SPI.begin();
-    mfrc522.PCD_Init();
-    Serial.println("MFRC522 TEST START!");
 
-    for (byte i = 0; i < 6; i++) {
-        key.keyByte[i] = 0xFF;
-    }
+    // SPI.begin();
+    // mfcr_ptr->PCD_Init();
+    // Serial.println("MFRC522 TEST START!");
 
-    Serial.println("This code scan the MIFARE Classsic NUID.");
-    Serial.print("Using the following key:");
-    printHex(key.keyByte, MFRC522::MF_KEY_SIZE);
-    Serial.println();
+    // for (byte i = 0; i < 6; i++) {
+    //     key.keyByte[i] = 0xFF;
+    // }
+
+    // Serial.println("This code scan the MIFARE Classsic NUID.");
+    // Serial.print("Using the following key:");
+    // printHex(key.keyByte, MFRC522::MF_KEY_SIZE);
+    // Serial.println();
+    mfcr_ptr = Mfrc522_init(SS_PIN, RST_PIN);
+
     pinMode(16, OUTPUT);
 
 
@@ -44,19 +42,19 @@ void setup()
 void loop()
 {
     // Reset the loop if no new card present on the sensor/reader. This saves the entire process when idle.
-    if(!mfrc522.PICC_IsNewCardPresent()) {
+    if(!mfcr_ptr->PICC_IsNewCardPresent()) {
         // Serial.println("can not find a new card");
         return;
     }
     // Verify if the NUID has been readed
-    if(!mfrc522.PICC_ReadCardSerial()) {
+    if(!mfcr_ptr->PICC_ReadCardSerial()) {
         Serial.println("have no card can choose");
     }
     Serial.println("---------------------------");
 
     Serial.print("PICC TYPE: ");
-    MFRC522::PICC_Type piccType = mfrc522.PICC_GetType(mfrc522.uid.sak);
-    Serial.println(mfrc522.PICC_GetTypeName(piccType));
+    MFRC522::PICC_Type piccType = mfcr_ptr->PICC_GetType(mfcr_ptr->uid.sak);
+    Serial.println(mfcr_ptr->PICC_GetTypeName(piccType));
 
     // 检查兼容性
     if (piccType != MFRC522::PICC_TYPE_MIFARE_MINI
@@ -71,13 +69,15 @@ void loop()
     // 显示卡片的详细信息
     Serial.println("CARD UID:");
     Serial.print("In HEX: ");
-    dump_byte_array(mfrc522.uid.uidByte, mfrc522.uid.size);
+    printHex(mfcr_ptr->uid.uidByte, mfcr_ptr->uid.size);
     Serial.println();
 
     Serial.print("In DEC: ");
-    printDec(mfrc522.uid.uidByte, mfrc522.uid.size);
+    printDec(mfcr_ptr->uid.uidByte, mfcr_ptr->uid.size);
     Serial.println();
 
+    content = Mfrc522_detaile(mfcr_ptr->uid.uidByte, mfcr_ptr->uid.size);
+    Serial.println(content);
     /*
       09 131 229 110    09131229110
       01 010 91 31      010109131
@@ -93,7 +93,8 @@ void loop()
         digitalWrite(16, HIGH);
         // servo.write(90);
         delay(500);
-    } else {
+    }
+    else {
         Serial.println("I Do Not Know This Card !");
         // servo.write(90);
         delay(500);
@@ -108,42 +109,12 @@ void loop()
     // 检查兼容性
     if (status != MFRC522::STATUS_OK) {
         Serial.print("身份验证失败？或者是卡链接失败");
-        Serial.println(mfrc522.GetStatusCodeName(status));
+        Serial.println(mfcr_ptr->GetStatusCodeName(status));
         return;
     }
     // 停止 PICC
-    mfrc522.PICC_HaltA();
+    mfcr_ptr->PICC_HaltA();
     /*  停止加密PCD */
-    mfrc522.PCD_StopCrypto1();
+    mfcr_ptr->PCD_StopCrypto1();
 }
-/**
-   将字节数组转储为串行的十六进制值
-*/
-void dump_byte_array(byte *buffer, byte bufferSize) {
-    content="";
-    for (byte i = 0; i < bufferSize; i++) {
-        Serial.print(buffer[i] < 0x10 ? " 0" : " ");
-        Serial.print(buffer[i], HEX);
-        // content="";
-        content.concat(String(mfrc522.uid.uidByte[i] < 0x10 ? "0" : ""));
-        content.concat(String(mfrc522.uid.uidByte[i], DEC));
-    }
-}
-/**
- * Helper routine to dump a byte array as hex values to Serial.
- */
-void printHex(byte *buffer, byte bufferSize) {
-    for (byte i = 0; i < bufferSize; i++) {
-        Serial.print(buffer[i] < 0x10 ? " 0" : " ");
-        Serial.print(buffer[i], HEX);
-    }
-}
-/**
- * Helper routine to dump a byte array as dec values to Serial.
- */
-void printDec(byte *buffer, byte bufferSize) {
-    for (byte i = 0; i < bufferSize; i++) {
-        Serial.print(buffer[i] < 0x10 ? " 0" : " ");
-        Serial.print(buffer[i], DEC);
-    }
-}
+
