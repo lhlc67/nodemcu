@@ -49,13 +49,13 @@ void Print_wifiinfo() {
     Serial.print("My IP address is: ");
     Serial.println(WiFi.localIP());     // 打印开发板的IP地址
     Serial.print("My gatewayIP is: ");
-    Serial.println(WiFi.gatewayIP());     // 打印开发板的IP地址
+    Serial.println(WiFi.gatewayIP());     // 打印网关地址
     Serial.print("My dnsIP is: ");
-    Serial.println(WiFi.dnsIP()); // 打印开发板的IP地址
+    Serial.println(WiFi.dnsIP()); // 打印DNS
     Serial.print("My hostname is: ");
-    Serial.println(WiFi.hostname());     // 打印开发板的IP地址
+    Serial.println(WiFi.hostname());     // 打印开发板主机名称
     Serial.print("My macAddress is: ");
-    Serial.println(WiFi.macAddress());     // 打印开发板的IP地址
+    Serial.println(WiFi.macAddress());     // 打印开发板MAC
     Serial.println("********* Print connect info *********");
 
 }

@@ -12,7 +12,7 @@ extern WiFiClient client;
 
 
 void Serial_Init(unsigned long baud);   //设置波特率, 等待串口释放, 打印提示信息
-void DHCP_connect();
-void Static_connect(IPAddress staticIP, IPAddress gateway, IPAddress subnet);
+void DHCP_connect();                    //DHCP方式连接WIFI
+void Static_connect(IPAddress staticIP, IPAddress gateway, IPAddress subnet);//
 void Print_wifiinfo();                  // 打印连接WIFI信息
 #endif

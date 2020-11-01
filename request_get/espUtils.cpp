@@ -73,7 +73,7 @@ String getIntnetTime() {
 // 我们可以使用ESP8266利用互联网或局域网向网络服务器发送HTTP请求，
 // 并且分析网络服务器返回的HTTP响应信息，从而实现物联网应用。
 
-// TCP/ip
+// TCP/IP
 // ESP8266库中还有一个专门用于TCP通讯的WiFiClient库。由于HTTP协议是建立在TCP协议基础之上的，
 // 我们也可以使用WiFiClient库来实现HTTP通讯。在这一点上，ESP8266HTTPClient库与WiFiClient库在功能上形成了互补。
     WiFiClient client;
@@ -84,7 +84,6 @@ String getIntnetTime() {
     Serial.print("[HTTP] begin...\n");
 
     if (http.begin(client, "http://quan.suning.com/getSysTime.do")) {  // HTTP
-
 
         Serial.print("[HTTP] GET...\n");
         // 获取GET请求的响应码
@@ -97,6 +96,10 @@ String getIntnetTime() {
             // 如果相应为200(请求正常) 或者 301重定向
             if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
                 // 拿到请求的相应信息
+                /**
+                 * return all payload as String (may need lot of ram or trigger out of memory!)
+                 * @return String
+                 */
                 payload = http.getString();
                 // 字符串截取，拿到具体时间
                 payload=payload.substring(13,32);

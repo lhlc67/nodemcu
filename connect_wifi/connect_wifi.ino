@@ -13,10 +13,10 @@ void setup()
     DHCP_connect();
 
     // 2. 用固态IP方式接入本地WIFI，提高接收速度和可靠性
-//     IPAddress staticIP(192,168,0,22);       // 静态IP
-//     IPAddress gateway(192,168,0,1);         // 网关
-//     IPAddress subnet(255,255,255,0);        // 子网掩码
-//     Static_connect(staticIP, gateway, subnet);
+    // IPAddress staticIP(192,168,0,22);       // 静态IP
+    // IPAddress gateway(192,168,0,1);         // 网关
+    // IPAddress subnet(255,255,255,0);        // 子网掩码
+    // Static_connect(staticIP, gateway, subnet);
 }
 void loop()
 {
