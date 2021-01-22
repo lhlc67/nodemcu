@@ -1,7 +1,7 @@
 /*
  * @Author: lhlcyq
  * @Date: 2021-01-10 20:47:14
- * @LastEditTime: 2021-01-14 20:15:28
+ * @LastEditTime: 2021-01-22 22:01:50
  * @LastEditors: Please set LastEditors
  * @Description: 连接数据库工具类
  * @FilePath: \VScode\SensorDemo\MYSQL\SqlUtils.h
@@ -22,14 +22,13 @@ struct ConnectMessage {
 };
 // 根据不同的数据表的数据修改
 typedef struct {
-    String device_id, device_name;
-    String product_name, product_process;
-    String date;
+    String equipment_id, product_id, work_id;
+    int count;
 } TableMessage;
 // 数据库工具类
 class SqlUtils {
 public:
-    SqlUtils(Client &client);
+    SqlUtils(Client& client);
 
     // Data members
     ConnectMessage ConnMessage;
